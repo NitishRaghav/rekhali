@@ -1,5 +1,8 @@
-import { createClient } from "@/lib/supabase/server"
+import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
+import { db } from "@/server/db"
+import { adminUsers, products, settings } from "@/shared/schema"
+import { eq } from "drizzle-orm"
 import { AdminDashboard } from "@/components/admin/admin-dashboard"
 
 export const metadata = {
@@ -7,26 +10,25 @@ export const metadata = {
 }
 
 export default async function AdminDashboardPage() {
-  const supabase = await createClient()
+  const cookieStore = await cookies()
+  const sessionId = cookieStore.get("admin_session")?.value
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  if (!user) {
+  if (!sessionId) {
     redirect("/admin/login")
   }
 
-  // Check if user is admin
-  const { data: adminUser } = await supabase.from("admin_users").select("*").eq("id", user.id).single()
+  // Get admin user
+  const adminUser = await db.query.adminUsers.findFirst({
+    where: eq(adminUsers.id, sessionId),
+  })
 
   if (!adminUser) {
     redirect("/admin/login")
   }
 
-  const { data: products } = await supabase.from("products").select("*").order("created_at", { ascending: false })
+  // Get products and settings
+  const productsList = await db.query.products.findMany()
+  const settingsList = await db.query.settings.findMany()
 
-  const { data: settings } = await supabase.from("settings").select("*")
-
-  return <AdminDashboard products={products || []} settings={settings || []} userEmail={user.email || ""} />
+  return <AdminDashboard products={productsList || []} settings={settingsList || []} userEmail={adminUser.email || ""} />
 }
