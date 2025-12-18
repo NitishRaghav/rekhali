@@ -56,6 +56,29 @@ Automatically configured by Replit:
 - **Email**: admin@rekhali.com
 - **Password**: Rekhali@2024
 
+## Product Management Features
+The admin dashboard now includes:
+- **Image Upload**: Upload hero image and multiple product images
+- **Image Numbering**: Automatically numbered (1, 2, 3...) for each product
+- **Hero Image Selection**: Set a main display image for the product
+- **Product Story**: Add a detailed story/narrative for each product
+- **Product Gallery**: Upload and manage multiple product images with visual preview
+- **Product Details**: Name, price, sizes, fabric, care instructions, stock status, featured flag
+
+### Adding Products
+1. Go to /admin/dashboard
+2. Click "Add Product"
+3. Fill in product details including:
+   - Product name, price, original price
+   - Description and product story
+   - Upload hero image (main image)
+   - Upload gallery images (numbered automatically)
+   - Sizes, fabric type, care instructions
+   - Mark as in-stock or featured
+4. Submit to add product to database
+
+All images are stored as base64 data URLs in the database.
+
 ## Development
 The dev server runs on port 5000 with:
 ```
