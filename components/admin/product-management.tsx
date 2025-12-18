@@ -40,10 +40,32 @@ interface ProductManagementProps {
 export function ProductManagement({ initialProducts }: ProductManagementProps) {
   const [products, setProducts] = useState<Product[]>(initialProducts)
   const [showForm, setShowForm] = useState(false)
+  const [editingId, setEditingId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState<string | null>(null)
   const router = useRouter()
+
+  const editProduct = (product: Product) => {
+    setFormData({
+      name: product.name,
+      description: product.description,
+      story: product.story || "",
+      price: String(product.price),
+      original_price: product.original_price ? String(product.original_price) : "",
+      hero_image: product.hero_image || "",
+      images: product.images || [],
+      image_order: product.image_order || [],
+      sizes: product.sizes?.join(", ") || "S, M, L, XL",
+      fabric: product.fabric || "",
+      care_instructions: product.care_instructions || "",
+      in_stock: product.in_stock,
+      featured: product.featured,
+    })
+    setEditingId(product.id)
+    setShowForm(true)
+    setError(null)
+  }
 
   // Form state
   const [formData, setFormData] = useState({
@@ -79,6 +101,7 @@ export function ProductManagement({ initialProducts }: ProductManagementProps) {
       featured: false,
     })
     setShowForm(false)
+    setEditingId(null)
     setError(null)
   }
 
@@ -132,10 +155,12 @@ export function ProductManagement({ initialProducts }: ProductManagementProps) {
       .filter(Boolean)
 
     try {
+      const method = editingId ? "PUT" : "POST"
       const response = await fetch("/api/products", {
-        method: "POST",
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          ...(editingId && { id: editingId }),
           name: formData.name,
           slug,
           description: formData.description,
@@ -155,16 +180,21 @@ export function ProductManagement({ initialProducts }: ProductManagementProps) {
 
       if (!response.ok) {
         const error = await response.json()
-        throw new Error(error.error || "Failed to add product")
+        throw new Error(error.error || `Failed to ${editingId ? "update" : "add"} product`)
       }
 
-      const newProduct = await response.json()
-      setProducts([newProduct, ...products])
-      setSuccess("Product added successfully!")
+      const resultProduct = await response.json()
+      if (editingId) {
+        setProducts(products.map((p) => (p.id === editingId ? resultProduct : p)))
+        setSuccess("Product updated successfully!")
+      } else {
+        setProducts([resultProduct, ...products])
+        setSuccess("Product added successfully!")
+      }
       resetForm()
       router.refresh()
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to add product")
+      setError(err instanceof Error ? err.message : "Failed to save product")
     } finally {
       setLoading(false)
     }
@@ -393,10 +423,10 @@ export function ProductManagement({ initialProducts }: ProductManagementProps) {
                   {loading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Adding...
+                      {editingId ? "Updating..." : "Adding..."}
                     </>
                   ) : (
-                    "Add Product"
+                    editingId ? "Update Product" : "Add Product"
                   )}
                 </Button>
                 <Button type="button" variant="outline" onClick={resetForm}>
@@ -442,6 +472,9 @@ export function ProductManagement({ initialProducts }: ProductManagementProps) {
                     <p className="text-xs text-muted-foreground">{product.images.length} images</p>
                   )}
                 </div>
+                <Button variant="outline" size="sm" onClick={() => editProduct(product)}>
+                  Edit
+                </Button>
                 <Button variant="destructive" size="icon" onClick={() => handleDelete(product.id)}>
                   <Trash2 className="h-4 w-4" />
                 </Button>

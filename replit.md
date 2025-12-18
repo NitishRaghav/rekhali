@@ -79,6 +79,16 @@ The admin dashboard now includes:
 
 All images are stored as base64 data URLs in the database.
 
+## Product Editing
+- Click "Edit" button next to any product to modify it
+- All fields can be updated including images
+- Submit to save changes
+
+## Display on Main Website
+Products automatically appear on:
+- `/products` - Main product listing page
+- `/` - Featured products on homepage (if marked as featured)
+
 ## Development
 The dev server runs on port 5000 with:
 ```

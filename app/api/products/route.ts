@@ -1,12 +1,14 @@
 import { db } from "@/server/db";
 import { products } from "@/shared/schema";
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 export async function GET() {
   try {
-    const productsList = await db.query.products.findMany();
+    const productsList = await db.query.products.findMany({
+      orderBy: [desc(products.created_at)],
+    });
     return NextResponse.json(productsList);
   } catch (error) {
     console.error("Get products error:", error);
@@ -49,6 +51,38 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Create product error:", error);
     return NextResponse.json({ error: "Failed to create product" }, { status: 500 });
+  }
+}
+
+export async function PUT(request: NextRequest) {
+  try {
+    const cookieStore = await cookies();
+    const sessionId = cookieStore.get("admin_session")?.value;
+
+    if (!sessionId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const body = await request.json();
+    const { id, ...updateData } = body;
+
+    if (!id) {
+      return NextResponse.json({ error: "Product ID required" }, { status: 400 });
+    }
+
+    const updated = await db
+      .update(products)
+      .set({
+        ...updateData,
+        updated_at: new Date(),
+      })
+      .where(eq(products.id, id))
+      .returning();
+
+    return NextResponse.json(updated[0]);
+  } catch (error) {
+    console.error("Update product error:", error);
+    return NextResponse.json({ error: "Failed to update product" }, { status: 500 });
   }
 }
 

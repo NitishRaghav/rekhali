@@ -1,7 +1,9 @@
-import { createClient } from "@/lib/supabase/server"
+import { db } from "@/server/db"
+import { products as productsTable } from "@/shared/schema"
 import { Header } from "@/components/public/header"
 import { Footer } from "@/components/public/footer"
 import { ProductCard } from "@/components/public/product-card"
+import { desc } from "drizzle-orm"
 
 export const metadata = {
   title: "Products – Rekhali",
@@ -9,8 +11,19 @@ export const metadata = {
 }
 
 export default async function ProductsPage() {
-  const supabase = await createClient()
-  const { data: products } = await supabase.from("products").select("*").order("created_at", { ascending: false })
+  try {
+    const products = await db.query.products.findMany({
+      orderBy: [desc(productsTable.created_at)],
+    })
+    
+    return renderProducts(products)
+  } catch (error) {
+    console.error("Error fetching products:", error)
+    return renderProducts([])
+  }
+}
+
+function renderProducts(products: any[]) {
 
   return (
     <main className="min-h-screen flex flex-col">
@@ -23,7 +36,7 @@ export default async function ProductsPage() {
         {/* Filters Row */}
         <div className="flex items-center justify-between mb-6 text-sm">
           <div className="flex items-center gap-4">
-            <span className="text-muted-foreground">{products?.length || 0} items</span>
+            <span className="text-muted-foreground">{products.length} items</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-muted-foreground">Sort</span>
@@ -37,7 +50,7 @@ export default async function ProductsPage() {
         </div>
 
         {/* Products Grid */}
-        {products && products.length > 0 ? (
+        {products.length > 0 ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
