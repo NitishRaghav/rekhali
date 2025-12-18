@@ -1,0 +1,48 @@
+{
+    "access_token": "eyJhbGciOiJIUzI1NiIsImtpZCI6IkpWZ3J6MDNxS0V6UjZmSVMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2l5bnpuYWlqYnZhaXNhYWZqaXdmLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiI1ZjQ4ZGJmNy05MGU5LTQ3ZGItYmU0My0xMmFkYjM3NjIxODAiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzY2MDc0Mzg1LCJpYXQiOjE3NjYwNzA3ODUsImVtYWlsIjoiYWRtaW5AcmVraGFsaS5jb20iLCJwaG9uZSI6IiIsImFwcF9tZXRhZGF0YSI6eyJwcm92aWRlciI6ImVtYWlsIiwicHJvdmlkZXJzIjpbImVtYWlsIl19LCJ1c2VyX21ldGFkYXRhIjp7ImVtYWlsX3ZlcmlmaWVkIjp0cnVlfSwicm9sZSI6ImF1dGhlbnRpY2F0ZWQiLCJhYWwiOiJhYWwxIiwiYW1yIjpbeyJtZXRob2QiOiJwYXNzd29yZCIsInRpbWVzdGFtcCI6MTc2NjA3MDc4NX1dLCJzZXNzaW9uX2lkIjoiMDlkM2RiNDQtMGNkMC00ZWE3LThiNzMtZWMxZjBmY2NiZTUyIiwiaXNfYW5vbnltb3VzIjpmYWxzZX0.agOYc6QZIF7aYttTjwoW6U8N9ssyhsLsCxz_vFDFHrg",
+    "token_type": "bearer",
+    "expires_in": 3600,
+    "expires_at": 1766074385,
+    "refresh_token": "vz7osuxigslo",
+    "user": {
+        "id": "5f48dbf7-90e9-47db-be43-12adb3762180",
+        "aud": "authenticated",
+        "role": "authenticated",
+        "email": "admin@rekhali.com",
+        "email_confirmed_at": "2025-12-17T06:22:44.866373Z",
+        "phone": "",
+        "confirmed_at": "2025-12-17T06:22:44.866373Z",
+        "last_sign_in_at": "2025-12-18T15:13:05.247605867Z",
+        "app_metadata": {
+            "provider": "email",
+            "providers": [
+                "email"
+            ]
+        },
+        "user_metadata": {
+            "email_verified": true
+        },
+        "identities": [
+            {
+                "identity_id": "a32c7d4d-cc3f-4d91-95b6-074e20e5c598",
+                "id": "5f48dbf7-90e9-47db-be43-12adb3762180",
+                "user_id": "5f48dbf7-90e9-47db-be43-12adb3762180",
+                "identity_data": {
+                    "email": "admin@rekhali.com",
+                    "email_verified": false,
+                    "phone_verified": false,
+                    "sub": "5f48dbf7-90e9-47db-be43-12adb3762180"
+                },
+                "provider": "email",
+                "last_sign_in_at": "2025-12-17T06:22:44.862678Z",
+                "created_at": "2025-12-17T06:22:44.862745Z",
+                "updated_at": "2025-12-17T06:22:44.862745Z",
+                "email": "admin@rekhali.com"
+            }
+        ],
+        "created_at": "2025-12-17T06:22:44.845914Z",
+        "updated_at": "2025-12-18T15:13:05.249815Z",
+        "is_anonymous": false
+    },
+    "weak_password": null
+}
